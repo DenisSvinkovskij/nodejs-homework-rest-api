@@ -1,5 +1,5 @@
-const Joi = require('joi')
-const { httpCodes } = require('../helpers/code-constans')
+const Joi = require('joi');
+const { httpCodes } = require('../helpers/code-constans');
 
 const schemaCreateContact = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).required(),
@@ -12,7 +12,7 @@ const schemaCreateContact = Joi.object({
       tlds: { allow: ['com', 'net', 'ua', 'ru'] },
     })
     .required(),
-})
+});
 
 const schemaUpdateContact = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).optional(),
@@ -25,31 +25,31 @@ const schemaUpdateContact = Joi.object({
       tlds: { allow: ['com', 'net', 'ua', 'ru'] },
     })
     .optional(),
-})
+}).required();
 
 const validate = (schema, body, next) => {
-  const { error } = schema.validate(body)
+  const { error } = schema.validate(body);
   if (error) {
-    const [{ message }] = error.details
+    const [{ message }] = error.details;
 
     return next({
       status: httpCodes.BAD_REQUEST,
       message: `Field ${message.replace(/"/g, '')}`,
       data: 'Bad Request',
-    })
+    });
   }
-  next()
-}
+  next();
+};
 
 const validateCreateContact = (req, res, next) => {
-  return validate(schemaCreateContact, req.body, next)
-}
+  return validate(schemaCreateContact, req.body, next);
+};
 
 const validateUpdateContact = (req, res, next) => {
-  return validate(schemaUpdateContact, req.body, next)
-}
+  return validate(schemaUpdateContact, req.body, next);
+};
 
 module.exports = {
   validateCreateContact,
   validateUpdateContact,
-}
+};
