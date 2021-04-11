@@ -111,14 +111,6 @@ const updateContact = async (req, res, next) => {
 };
 
 const updateContactStatus = async (req, res, next) => {
-  if (Object.values(req.body).length === 0) {
-    return next({
-      status: httpCodes.BAD_REQUEST,
-      message: 'Missing field favorite',
-      data: 'Missing fields',
-    });
-  }
-
   try {
     const contact = await contactsServices.updateContactStatus(
       req.params,
