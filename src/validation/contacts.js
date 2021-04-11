@@ -29,9 +29,7 @@ const schemaUpdateContact = Joi.object({
     .optional(),
 
   favorite: Joi.boolean().optional(),
-})
-  .min(1)
-  .required();
+}).min(1);
 
 const statusUpdateSchema = Joi.object({
   favorite: Joi.boolean().required(),
