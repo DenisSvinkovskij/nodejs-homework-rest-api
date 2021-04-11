@@ -3,9 +3,9 @@ const { ContactsServices } = require('../services/contacts');
 
 const contactsServices = new ContactsServices();
 
-const listContacts = (req, res, next) => {
+const listContacts = async (req, res, next) => {
   try {
-    const contacts = contactsServices.listContacts();
+    const contacts = await contactsServices.listContacts();
     res.status(httpCodes.OK).json({
       status: 'success',
       code: httpCodes.OK,
@@ -18,9 +18,9 @@ const listContacts = (req, res, next) => {
   }
 };
 
-const getContactById = (req, res, next) => {
+const getContactById = async (req, res, next) => {
   try {
-    const contact = contactsServices.getContactById(req.params);
+    const contact = await contactsServices.getContactById(req.params);
     if (contact) {
       res.status(httpCodes.OK).json({
         status: 'success',
@@ -41,9 +41,9 @@ const getContactById = (req, res, next) => {
   }
 };
 
-const removeContact = (req, res, next) => {
+const removeContact = async (req, res, next) => {
   try {
-    const contact = contactsServices.removeContact(req.params);
+    const contact = await contactsServices.removeContact(req.params);
     if (contact) {
       res.status(httpCodes.OK).json({
         status: 'success',
@@ -64,9 +64,9 @@ const removeContact = (req, res, next) => {
   }
 };
 
-const addContact = (req, res, next) => {
+const addContact = async (req, res, next) => {
   try {
-    const contact = contactsServices.addContact(req.body);
+    const contact = await contactsServices.addContact(req.body);
     res.status(httpCodes.CREATED).json({
       status: 'success',
       code: httpCodes.CREATED,
@@ -79,7 +79,7 @@ const addContact = (req, res, next) => {
   }
 };
 
-const updateContact = (req, res, next) => {
+const updateContact = async (req, res, next) => {
   if (Object.values(req.body).length === 0) {
     return next({
       status: httpCodes.BAD_REQUEST,
@@ -89,7 +89,41 @@ const updateContact = (req, res, next) => {
   }
 
   try {
-    const contact = contactsServices.updateContact(req.params, req.body);
+    const contact = await contactsServices.updateContact(req.params, req.body);
+    if (contact) {
+      res.status(httpCodes.OK).json({
+        status: 'success',
+        code: httpCodes.OK,
+        data: {
+          contact,
+        },
+      });
+    } else {
+      return next({
+        status: httpCodes.NOT_FOUND,
+        message: 'Contact not found',
+        data: 'Not Found',
+      });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+const updateContactStatus = async (req, res, next) => {
+  if (Object.values(req.body).length === 0) {
+    return next({
+      status: httpCodes.BAD_REQUEST,
+      message: 'Missing field favorite',
+      data: 'Missing fields',
+    });
+  }
+
+  try {
+    const contact = await contactsServices.updateContactStatus(
+      req.params,
+      req.body,
+    );
     if (contact) {
       res.status(httpCodes.OK).json({
         status: 'success',
@@ -116,4 +150,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateContactStatus,
 };
