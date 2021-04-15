@@ -6,23 +6,26 @@ const {
   validateUpdateStatus,
 } = require('../../validation/contacts');
 const contactsController = require('../../controllers/contacts');
+const guard = require('../../helpers/guard');
 
-router.get('/', contactsController.listContacts);
+router.get('/', guard, contactsController.listContacts);
 
-router.get('/:contactId', contactsController.getContactById);
+router.get('/:contactId', guard, contactsController.getContactById);
 
-router.post('/', validateCreateContact, contactsController.addContact);
+router.post('/', guard, validateCreateContact, contactsController.addContact);
 
-router.delete('/:contactId', contactsController.removeContact);
+router.delete('/:contactId', guard, contactsController.removeContact);
 
 router.patch(
   '/:contactId',
+  guard,
   validateUpdateContact,
   contactsController.updateContact,
 );
 
 router.patch(
   '/:contactId/favorite',
+  guard,
   validateUpdateStatus,
   contactsController.updateContactStatus,
 );

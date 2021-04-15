@@ -5,28 +5,32 @@ class ContactsServices {
     this.contactsRepository = new ContactsRepository();
   }
 
-  async listContacts() {
-    return await this.contactsRepository.listContacts();
+  async listContacts(userId, query) {
+    return await this.contactsRepository.listContacts(userId, query);
   }
 
-  async getContactById({ contactId }) {
-    return await this.contactsRepository.getContactById(contactId);
+  async getContactById(userId, { contactId }) {
+    return await this.contactsRepository.getContactById(userId, contactId);
   }
 
-  async removeContact({ contactId }) {
-    return await this.contactsRepository.removeContact(contactId);
+  async removeContact(userId, { contactId }) {
+    return await this.contactsRepository.removeContact(userId, contactId);
   }
 
-  async addContact(body) {
-    return await this.contactsRepository.addContact(body);
+  async addContact(userId, body) {
+    return await this.contactsRepository.addContact(userId, body);
   }
 
-  async updateContact({ contactId }, body) {
-    return await this.contactsRepository.updateContact(contactId, body);
+  async updateContact(userId, { contactId }, body) {
+    return await this.contactsRepository.updateContact(userId, contactId, body);
   }
 
-  async updateContactStatus({ contactId }, body) {
-    return await this.contactsRepository.updateContactStatus(contactId, body);
+  async updateContactStatus(userId, { contactId }, body) {
+    return await this.contactsRepository.updateContactStatus(
+      userId,
+      contactId,
+      body,
+    );
   }
 }
 

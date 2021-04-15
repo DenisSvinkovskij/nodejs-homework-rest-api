@@ -2,17 +2,33 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const { httpCodes } = require('./src/helpers/code-constans');
-
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const contactsRouter = require('./src/routes/api/contacts');
+const usersRouter = require('./src/routes/api/users');
 
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, //15 min
+  max: 100,
+  handler: (req, res, next) => {
+    next({
+      status: httpCodes.BAD_REQUEST,
+      message: 'Вы исчерпали количество запросов за 15 минут',
+    });
+  },
+});
+
+app.use('/api/', apiLimiter);
+app.use(helmet());
 app.use(logger(formatsLogger));
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: 10000 }));
 
+app.use('/api/users', usersRouter);
 app.use('/api/contacts', contactsRouter);
 
 // app.use((req, res, next) => {
