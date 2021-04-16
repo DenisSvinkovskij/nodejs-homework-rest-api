@@ -36,7 +36,7 @@ class ContactsRepository {
 
   async getContactById(userId, contactId) {
     const result = await this.contactModel
-      .findById(contactId, { owner: userId })
+      .findById({ _id: contactId, owner: userId })
       .populate({
         path: 'owner',
         select: 'subscription email -_id',

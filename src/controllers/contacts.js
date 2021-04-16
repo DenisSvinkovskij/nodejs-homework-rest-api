@@ -30,6 +30,7 @@ const getContactById = async (req, res, next) => {
     const userId = req.user.id;
 
     const contact = await contactsServices.getContactById(userId, req.params);
+    console.log(contact);
     if (contact) {
       res.status(httpCodes.OK).json({
         status: 'success',
