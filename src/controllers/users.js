@@ -25,6 +25,7 @@ const registration = async (req, res, next) => {
       data: {
         email: newUser.email,
         subscription: newUser.subscription,
+        avatarURL: user.avatarURL,
       },
     });
   } catch (error) {
@@ -89,16 +90,39 @@ const updateSubscription = async (req, res, next) => {
       req.body,
     );
 
-    return res
-      .status(httpCodes.OK)
-      .json({
+    return res.status(httpCodes.OK).json({
+      status: 'success',
+      code: httpCodes.OK,
+      data: {
+        email: updatedUser.email,
+        subscription: updatedUser.subscription,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const uploadAvatar = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    if (req.file) {
+      const url = await usersServices.uploadAvatar(userId, req.file);
+
+      return res.status(httpCodes.OK).json({
         status: 'success',
         code: httpCodes.OK,
         data: {
-          email: updatedUser.email,
-          subscription: updatedUser.subscription,
+          avatarURL: url,
         },
       });
+    }
+
+    next({
+      status: httpCodes.BAD_REQUEST,
+      message: 'Field avatar is required and must contains a valid image file',
+    });
   } catch (error) {
     next(error);
   }
@@ -110,4 +134,5 @@ module.exports = {
   logout,
   current,
   updateSubscription,
+  uploadAvatar,
 };

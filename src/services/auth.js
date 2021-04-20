@@ -25,7 +25,11 @@ class AuthServices {
 
     return {
       token,
-      user: { email: user.email, subscription: user.subscription },
+      user: {
+        email: user.email,
+        subscription: user.subscription,
+        avatarURL: user.avatarURL,
+      },
     };
   }
 
@@ -37,7 +41,11 @@ class AuthServices {
   async current(email) {
     const user = await this.usersRepository.findByEmail(email);
 
-    return { email: user.email, subscription: user.subscription };
+    return {
+      email: user.email,
+      subscription: user.subscription,
+      avatarURL: user.avatarURL,
+    };
   }
 }
 

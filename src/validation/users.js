@@ -53,6 +53,10 @@ const validateSubscriptionUpdate = (req, res, next) => {
   return validate(subscriptionUpdateSchema, req.body, next);
 };
 
+// const validateAvatarUpload = (req, res, next) => {
+//   return validate(avatarUploadSchema, req.body, next);
+// };
+
 module.exports = {
   validateRegistrationUser,
   validateLoginUser,

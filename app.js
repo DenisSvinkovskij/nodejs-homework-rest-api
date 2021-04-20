@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const contactsRouter = require('./src/routes/api/contacts');
 const usersRouter = require('./src/routes/api/users');
+const path = require('path');
 
 const app = express();
 
@@ -21,6 +22,8 @@ const apiLimiter = rateLimit({
     });
   },
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/', apiLimiter);
 app.use(helmet());
