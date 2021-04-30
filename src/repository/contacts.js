@@ -1,4 +1,3 @@
-const e = require('express');
 const Contact = require('../schemas/schema-contact');
 
 class ContactsRepository {

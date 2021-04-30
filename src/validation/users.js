@@ -2,6 +2,8 @@ const Joi = require('joi');
 const { httpCodes } = require('../helpers/code-constans');
 
 const schemaRegistrationUser = Joi.object({
+  name: Joi.string().min(2).max(30).required(),
+
   email: Joi.string()
     .email({
       minDomainSegments: 2,
@@ -25,6 +27,15 @@ const schemaLoginUser = Joi.object({
 
 const subscriptionUpdateSchema = Joi.object({
   subscription: Joi.any().valid('starter', 'pro', 'business').required(),
+});
+
+const schemaVerifyUser = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net', 'ua', 'ru'] },
+    })
+    .required(),
 });
 
 const validate = (schema, body, next) => {
@@ -53,12 +64,13 @@ const validateSubscriptionUpdate = (req, res, next) => {
   return validate(subscriptionUpdateSchema, req.body, next);
 };
 
-// const validateAvatarUpload = (req, res, next) => {
-//   return validate(avatarUploadSchema, req.body, next);
-// };
+const validateVerifyUser = (req, res, next) => {
+  return validate(schemaVerifyUser, req.body, next);
+};
 
 module.exports = {
   validateRegistrationUser,
   validateLoginUser,
   validateSubscriptionUpdate,
+  validateVerifyUser,
 };
