@@ -24,6 +24,7 @@ describe('Unit test guard.js', () => {
     await guard(req, res, next);
     expect(passport.authenticate).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenCalledTimes(1);
+    // expect(req.user).toBeDefined();
     done();
   });
 });

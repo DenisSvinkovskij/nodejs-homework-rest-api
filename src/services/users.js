@@ -2,14 +2,26 @@ const { UsersRepository } = require('../repository/users');
 const jimp = require('jimp');
 const path = require('path');
 const fs = require('fs/promises');
+const { v4: uuid } = require('uuid');
+const EmailService = require('./emailSend');
 
 class UserServices {
   constructor() {
     this.usersRepository = new UsersRepository();
+    this.emailService = new EmailService();
   }
 
   async create(body) {
-    const data = await this.usersRepository.create(body);
+    const verifyToken = uuid();
+    const { name, email } = body;
+
+    try {
+      await this.emailService.sendEmail(verifyToken, name, email);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+
+    const data = await this.usersRepository.create({ ...body, verifyToken });
     return data;
   }
 
@@ -55,6 +67,27 @@ class UserServices {
     await this.usersRepository.updateAvatarById(userId, { avatarURL: url });
 
     return url;
+  }
+
+  async verification({ verificationToken }) {
+    const user = await this.usersRepository.findByField({
+      verifyToken: verificationToken,
+    });
+
+    if (user) {
+      await user.updateOne({ verify: true, verifyToken: null }); // this.repo...
+      return true;
+    }
+
+    return false;
+  }
+
+  async reSendMail({ name, email, verifyToken }) {
+    try {
+      await this.emailService.sendEmail(verifyToken, name, email);
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
 }
 

@@ -15,6 +15,11 @@ class UsersRepository {
     return result;
   }
 
+  async findByField(field) {
+    const result = await this.userModel.findOne(field);
+    return result;
+  }
+
   async create(body) {
     const user = new this.userModel(body);
 

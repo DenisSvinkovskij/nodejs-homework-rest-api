@@ -5,6 +5,10 @@ const { Schema } = mongoose;
 const gravatar = require('gravatar');
 
 const userSchema = new Schema({
+  name: {
+    type: String,
+    default: 'Guest',
+  },
   password: {
     type: String,
     required: [true, 'Password is required'],
@@ -28,6 +32,14 @@ const userSchema = new Schema({
     default: function () {
       return gravatar.url(this.email, { s: '250' }, true);
     },
+  },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verifyToken: {
+    type: String,
+    required: [true, 'Verify token is required'],
   },
 });
 

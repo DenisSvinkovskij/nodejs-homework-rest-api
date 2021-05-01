@@ -13,6 +13,10 @@ class AuthServices {
     const user = await this.usersRepository.findByEmail(email);
     const valid = await user.validPassword(password);
 
+    if (!user.verify) {
+      throw new Error('First confirm your email');
+    }
+
     if (!user || !valid) {
       return null;
     }
@@ -26,6 +30,7 @@ class AuthServices {
     return {
       token,
       user: {
+        name: user.name,
         email: user.email,
         subscription: user.subscription,
         avatarURL: user.avatarURL,
@@ -42,6 +47,7 @@ class AuthServices {
     const user = await this.usersRepository.findByEmail(email);
 
     return {
+      name: user.name,
       email: user.email,
       subscription: user.subscription,
       avatarURL: user.avatarURL,
